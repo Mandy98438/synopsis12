@@ -1,10 +1,6 @@
-// ─────────────────────────────────────────────
-// KARD — Auth Error Page
-// Route: /auth/error
-// ─────────────────────────────────────────────
-
 "use client";
 export const dynamic = "force-dynamic";
+import { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { KardLogo } from "@/components/kard/kard-logo";
@@ -28,7 +24,7 @@ const ERROR_MESSAGES: Record<string, { title: string; detail: string }> = {
   },
 };
 
-export default function AuthErrorPage() {
+function AuthErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error") ?? "Default";
   const { title, detail } = ERROR_MESSAGES[error] ?? ERROR_MESSAGES.Default!;
@@ -56,5 +52,13 @@ export default function AuthErrorPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function AuthErrorPage() {
+  return (
+    <Suspense fallback={null}>
+      <AuthErrorContent />
+    </Suspense>
   );
 }

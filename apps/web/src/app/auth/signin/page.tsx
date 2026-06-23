@@ -1,5 +1,6 @@
 "use client";
 export const dynamic = "force-dynamic";
+import { Suspense } from "react";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
@@ -14,7 +15,7 @@ const OAUTH = [
   { id: "google", label: "Continue with Google", bg: "bg-[#141414] hover:bg-[#1a1a1a] border border-[#222]" },
 ];
 
-export default function SignInPage() {
+function SignInContent() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard";
   const [email, setEmail] = useState("");
@@ -83,5 +84,13 @@ export default function SignInPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={null}>
+      <SignInContent />
+    </Suspense>
   );
 }
