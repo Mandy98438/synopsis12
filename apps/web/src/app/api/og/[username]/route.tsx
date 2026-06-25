@@ -9,8 +9,6 @@ import { ImageResponse } from "next/og";
 import { type NextRequest } from "next/server";
 import { prisma } from "@/lib/db";
 
-export const runtime = "edge"; // edge runtime for speed
-
 export async function GET(
   req: NextRequest,
   { params }: { params: { username: string } }
