@@ -130,7 +130,7 @@ export default function HomePage() {
         <h2 className="text-2xl md:text-3xl font-medium text-white mb-3 md:mb-4">Ready to build your Kard?</h2>
         <p className="text-[#444] text-sm mb-6 md:mb-8">Takes 2 minutes. No credit card needed.</p>
         <Link href="/auth/signin" className="inline-block bg-[#E07020] hover:bg-[#c85e18] text-white font-medium px-8 py-3.5 rounded-xl transition-colors text-sm">
-          Create your Kard — it's free
+          Create your Kard — it&apos;s free
         </Link>
       </section>
 

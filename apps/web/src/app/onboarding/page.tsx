@@ -123,7 +123,7 @@ function VerifyStep({
         {connecting ? "Connecting to LinkedIn..." : "Connect LinkedIn"}
       </button>
       <button onClick={onSkip} className="w-full py-2.5 text-[#333] text-xs hover:text-[#555] transition-colors">
-        Skip for now — I'll verify later
+        Skip for now — I&apos;ll verify later
       </button>
       <p className="text-[#252525] text-[10px] text-center mt-4 leading-relaxed">
         We only read your public profile to confirm ownership.<br />Nothing is ever posted on your behalf.
@@ -141,12 +141,12 @@ function ReadyStep({ onBuild }: { onBuild: () => void }) {
           <path d="M6 14l5.5 5.5L22 8" stroke="#4CAF50" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
-      <h1 className="text-2xl font-medium text-white mb-3">You're all set</h1>
+      <h1 className="text-2xl font-medium text-white mb-3">You&apos;re all set</h1>
       <p className="text-[#555] text-sm leading-relaxed mb-10 max-w-xs mx-auto">
-        Now let's build your Kard. Add your photo, links, and choose how you want to show up in the world.
+        Now let&apos;s build your Kard. Add your photo, links, and choose how you want to show up in the world.
       </p>
       <div className="bg-[#111] border border-[#1e1e1e] rounded-2xl p-5 mb-8 text-left">
-        <p className="text-[#333] text-xs uppercase tracking-widest mb-4">What you'll create</p>
+        <p className="text-[#333] text-xs uppercase tracking-widest mb-4">What you&apos;ll create</p>
         <div className="flex flex-col gap-3">
           {[
             { icon: "📷", label: "Photo", desc: "Your face on the card" },

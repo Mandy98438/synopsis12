@@ -431,7 +431,7 @@ export function CardBuilder({
                   />
                   {!isNew && (
                     <p className="text-[10px] text-[#444]">
-                      Username can't be changed after creation
+                      Username can&apos;t be changed after creation
                     </p>
                   )}
                 </div>

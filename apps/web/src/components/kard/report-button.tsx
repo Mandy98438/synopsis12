@@ -93,7 +93,7 @@ export function ReportButton({ kardId, isDark = true }: ReportButtonProps) {
                   Report submitted
                 </p>
                 <p className={cn("text-xs mb-4", isDark ? "text-[#555]" : "text-[#aaa]")}>
-                  We'll review this card within 24 hours.
+                  We&apos;ll review this card within 24 hours.
                 </p>
                 <button onClick={handleClose} className="text-xs text-[#E07020] font-medium">
                   Close

@@ -29,7 +29,7 @@ export default function VerifyPage() {
           Click it to sign in — no password needed.
         </p>
         <p className="text-[#333] text-xs mb-8">
-          Link expires in 24 hours. Check your spam folder if you don't see it.
+          Link expires in 24 hours. Check your spam folder if you don&apos;t see it.
         </p>
 
         {/* Divider */}
