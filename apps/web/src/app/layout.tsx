@@ -12,13 +12,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  width: "device-width", initialScale: 1, maximumScale: 1, themeColor: "#0a0a0a",
+  width: "device-width", initialScale: 1, maximumScale: 1, themeColor: "#ffffff",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-[#0a0a0a] text-white antialiased">
+      <body className="bg-white text-black antialiased">
         <Providers>{children}</Providers>
       </body>
     </html>

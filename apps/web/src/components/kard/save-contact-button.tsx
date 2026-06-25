@@ -8,7 +8,7 @@
 "use client";
 
 import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 
 interface SaveContactButtonProps {
   kard: {
@@ -101,3 +101,4 @@ export function SaveContactButton({
     </button>
   );
 }
+

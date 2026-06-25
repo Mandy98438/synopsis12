@@ -3,7 +3,7 @@
 // The layered triangle mark + wordmark
 // ─────────────────────────────────────────────
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 
 interface KardLogoProps {
   size?: "sm" | "md" | "lg";
@@ -29,10 +29,10 @@ export function KardLogo({
   const { mark, text, gap } = sizes[size];
   const markColor = isDark
     ? muted ? "rgba(255,255,255,0.35)" : "#ffffff"
-    : muted ? "rgba(0,0,0,0.25)" : "#111111";
+    : muted ? "rgba(0,0,0,0.35)" : "#000000";
   const bgColor = isDark
     ? muted ? "rgba(0,0,0,0)" : "#141414"
-    : muted ? "rgba(255,255,255,0)" : "#FAF6EF";
+    : muted ? "rgba(255,255,255,0)" : "#ffffff";
   const textColor = isDark
     ? muted ? "text-white/35" : "text-white"
     : muted ? "text-black/25" : "text-[#111]";
@@ -60,7 +60,7 @@ export function KardLogo({
       {showWordmark && (
         <span
           className={cn(
-            "font-medium tracking-[0.08em] leading-none select-none",
+            "font-medium uppercase leading-none select-none",
             text,
             textColor
           )}
@@ -71,3 +71,4 @@ export function KardLogo({
     </div>
   );
 }
+

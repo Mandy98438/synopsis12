@@ -45,6 +45,7 @@ export const createKardSchema = z.object({
   phone: z.string().max(20).trim().optional(),
   location: z.string().max(100).trim().optional(),
   links: z.array(platformLinkSchema).max(10),
+  avatarUrl: z.string().optional().nullable().or(z.literal("")),
 });
 
 // ── Update kard ───────────────────────────────

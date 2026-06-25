@@ -7,7 +7,7 @@
 // ─────────────────────────────────────────────
 
 import { forwardRef, createContext, useContext, useState, useCallback } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 
 // ── Button ────────────────────────────────────
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -19,15 +19,15 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = "secondary", size = "md", loading, className, children, disabled, ...props }, ref) => {
     const variants = {
-      primary: "bg-[#E07020] hover:bg-[#c85e18] text-white border-transparent",
-      secondary: "bg-transparent hover:bg-[#1a1a1a] text-[#aaa] hover:text-white border-[#222] hover:border-[#333]",
-      ghost: "bg-transparent hover:bg-[#141414] text-[#666] hover:text-[#aaa] border-transparent",
-      danger: "bg-transparent hover:bg-[#2a0f0f] text-red-400 border-[#2a1a1a] hover:border-red-900",
+      primary: "bg-[#ff6600] hover:bg-[#e65c00] text-white border-transparent shadow-[var(--shadow-sm)]",
+      secondary: "bg-white hover:bg-[#f6f3ee] text-black border-black",
+      ghost: "bg-transparent hover:bg-[#f6f3ee] text-[#666] hover:text-black border-transparent",
+      danger: "bg-white hover:bg-red-50 text-red-600 border-red-200 hover:border-red-300",
     };
     const sizes = {
       sm: "text-xs px-3 py-1.5 rounded-lg",
-      md: "text-sm px-4 py-2.5 rounded-xl",
-      lg: "text-sm px-6 py-3.5 rounded-xl",
+      md: "text-sm px-5 py-2.5 rounded-[24px]",
+      lg: "text-sm px-7 py-3.5 rounded-[24px]",
     };
 
     return (
@@ -65,7 +65,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={inputId} className="text-[11px] text-[#555] tracking-wide uppercase font-medium">
+          <label htmlFor={inputId} className="text-[11px] text-[#888] uppercase font-medium">
             {label}
           </label>
         )}
@@ -79,11 +79,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              "w-full px-3.5 py-2.5 rounded-xl bg-[#0f0f0f] border text-sm text-white placeholder:text-[#333] outline-none transition-colors",
+              "w-full px-3.5 py-2.5 rounded-[16px] bg-white border text-sm text-black placeholder:text-[#aaa] outline-none transition-colors",
               prefix && "pl-[calc(3.5rem_*_var(--prefix-len,1))]",
               error
                 ? "border-red-500/40 focus:border-red-500/70"
-                : "border-[#1e1e1e] focus:border-[#333]",
+                : "border-[#e5e5e5] focus:border-black",
               className
             )}
             style={prefix ? { paddingLeft: `${prefix.length * 7.5 + 14}px` } : undefined}
@@ -91,7 +91,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           />
         </div>
         {error && <p className="text-xs text-red-400">{error}</p>}
-        {hint && !error && <p className="text-[11px] text-[#444]">{hint}</p>}
+        {hint && !error && <p className="text-[11px] text-[#888]">{hint}</p>}
       </div>
     );
   }
@@ -112,7 +112,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={inputId} className="text-[11px] text-[#555] tracking-wide uppercase font-medium">
+          <label htmlFor={inputId} className="text-[11px] text-[#888] uppercase font-medium">
             {label}
           </label>
         )}
@@ -120,16 +120,16 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={inputId}
           className={cn(
-            "w-full px-3.5 py-2.5 rounded-xl bg-[#0f0f0f] border text-sm text-white placeholder:text-[#333] outline-none transition-colors resize-none",
+            "w-full px-3.5 py-2.5 rounded-[16px] bg-white border text-sm text-black placeholder:text-[#aaa] outline-none transition-colors resize-none",
             error
               ? "border-red-500/40 focus:border-red-500/70"
-              : "border-[#1e1e1e] focus:border-[#333]",
+              : "border-[#e5e5e5] focus:border-black",
             className
           )}
           {...props}
         />
         {error && <p className="text-xs text-red-400">{error}</p>}
-        {hint && !error && <p className="text-[11px] text-[#444]">{hint}</p>}
+        {hint && !error && <p className="text-[11px] text-[#888]">{hint}</p>}
       </div>
     );
   }
@@ -145,11 +145,11 @@ interface BadgeProps {
 
 export function Badge({ variant = "default", children, className }: BadgeProps) {
   const variants = {
-    default: "bg-[#1a1a1a] text-[#666] border-[#222]",
-    success: "bg-[#0f2a0f] text-[#4CAF50] border-[#1a3a1a]",
-    warning: "bg-[#2a1f0f] text-[#E07020] border-[#3a2a1a]",
-    error: "bg-[#2a0f0f] text-red-400 border-[#3a1a1a]",
-    orange: "bg-[#E07020] text-white border-transparent",
+    default: "bg-[#f6f3ee] text-[#666] border-[#e5e5e5]",
+    success: "bg-[#ebfef6] text-[#00885a] border-[#00cc88]/25",
+    warning: "bg-[#fff3e8] text-[#ff6600] border-[#ff6600]/20",
+    error: "bg-red-50 text-red-600 border-red-200",
+    orange: "bg-[#ff6600] text-white border-transparent",
   };
 
   return (
@@ -229,3 +229,4 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 export function useToast() {
   return useContext(ToastContext);
 }
+

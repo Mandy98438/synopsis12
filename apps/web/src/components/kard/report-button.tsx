@@ -7,7 +7,7 @@
 "use client";
 
 import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 
 interface ReportButtonProps {
   kardId: string;
@@ -167,3 +167,4 @@ export function ReportButton({ kardId, isDark = true }: ReportButtonProps) {
     </>
   );
 }
+

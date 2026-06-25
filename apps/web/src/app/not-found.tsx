@@ -1,15 +1,18 @@
 import Link from "next/link";
 import { KardLogo } from "@/components/kard/kard-logo";
+
 export default function NotFound() {
   return (
-    <main className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center p-6 text-center">
-      <KardLogo size="md" isDark className="mb-10" />
-      <p className="text-[#333] text-xs font-mono mb-4">404</p>
-      <h1 className="text-2xl font-medium text-white mb-3">This Kard doesn&apos;t exist</h1>
-      <p className="text-[#444] text-sm mb-8">The card may have been removed or the username is wrong.</p>
-      <Link href="/" className="bg-[#E07020] hover:bg-[#c85e18] text-white px-6 py-3 rounded-xl text-sm font-medium transition-colors">
-        Go home
-      </Link>
+    <main className="flex min-h-screen flex-col items-center justify-center bg-[#f6f3ee] p-6 text-center text-black">
+      <div className="w-full max-w-[420px] rounded-[24px] bg-white p-8 shadow-[var(--shadow-xl)]">
+        <KardLogo size="md" isDark={false} className="mx-auto mb-10 justify-center" />
+        <p className="mb-4 text-xs font-medium text-[#888]">404</p>
+        <h1 className="mb-3 text-3xl font-medium">This Kard doesn&apos;t exist</h1>
+        <p className="mb-8 text-sm text-[#666]">The card may have been removed or the username is wrong.</p>
+        <Link href="/" className="inline-flex rounded-[24px] bg-[#ff6600] px-6 py-3 text-sm font-medium text-white shadow-[var(--shadow-sm)]">
+          Go home
+        </Link>
+      </div>
     </main>
   );
 }

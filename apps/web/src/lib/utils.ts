@@ -1,16 +1,5 @@
-// ─────────────────────────────────────────────
-// KARD — Utility Functions
-// ─────────────────────────────────────────────
-
 import { customAlphabet } from "nanoid";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import { prisma } from "@/lib/db";
-
-// ── Tailwind class merge ──────────────────────
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 // ── Short code generator ──────────────────────
 // Generates KRD-XXXX style codes
@@ -74,3 +63,5 @@ export function formatDate(date: Date | string): string {
     day: "numeric",
   }).format(new Date(date));
 }
+
+

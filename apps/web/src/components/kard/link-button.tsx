@@ -6,7 +6,7 @@
 
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 
 interface LinkButtonProps {
   link: {
@@ -95,3 +95,4 @@ export function LinkButton({ link, isDark = true, kardId }: LinkButtonProps) {
     </button>
   );
 }
+

@@ -15,7 +15,7 @@ import { z } from "zod";
 import { sendAbuseReportNotification } from "@/lib/email";
 
 export async function createContext(opts: CreateNextContextOptions) {
-  const session = await getServerSession(opts.req, opts.res, authOptions);
+  const session = await getServerSession(authOptions);
   return { session, prisma, req: opts.req };
 }
 export type Context = Awaited<ReturnType<typeof createContext>>;
