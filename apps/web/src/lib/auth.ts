@@ -1,24 +1,67 @@
-// ─────────────────────────────────────────────
-// KARD — Auth Configuration (NextAuth v4)
-// LinkedIn, GitHub, Google, Twitter OAuth
-// Email verification built in
-// ─────────────────────────────────────────────
-
-import { type NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import LinkedInProvider from "next-auth/providers/linkedin";
+import { type NextAuthOptions } from "next-auth";
+import EmailProvider from "next-auth/providers/email";
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import LinkedInProvider from "next-auth/providers/linkedin";
 import TwitterProvider from "next-auth/providers/twitter";
-import EmailProvider from "next-auth/providers/email";
 import { prisma } from "@/lib/db";
 import { sendVerificationEmail } from "@/lib/email";
+
+const providers: NextAuthOptions["providers"] = [
+  EmailProvider({
+    from: process.env.RESEND_FROM_EMAIL,
+    sendVerificationRequest: async ({ identifier, url }) => {
+      await sendVerificationEmail({ to: identifier, url });
+    },
+  }),
+];
+
+if (process.env.LINKEDIN_CLIENT_ID && process.env.LINKEDIN_CLIENT_SECRET) {
+  providers.push(
+    LinkedInProvider({
+      clientId: process.env.LINKEDIN_CLIENT_ID,
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+      authorization: {
+        params: { scope: "openid profile email" },
+      },
+    }),
+  );
+}
+
+if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+  providers.push(
+    GitHubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    }),
+  );
+}
+
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+  );
+}
+
+if (process.env.TWITTER_CLIENT_ID && process.env.TWITTER_CLIENT_SECRET) {
+  providers.push(
+    TwitterProvider({
+      clientId: process.env.TWITTER_CLIENT_ID,
+      clientSecret: process.env.TWITTER_CLIENT_SECRET,
+      version: "2.0",
+    }),
+  );
+}
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60,
   },
   pages: {
     signIn: "/auth/signin",
@@ -26,50 +69,13 @@ export const authOptions: NextAuthOptions = {
     error: "/auth/error",
     newUser: "/onboarding",
   },
-  providers: [
-    // ── Email (primary signup method) ──────────
-    EmailProvider({
-      from: process.env.RESEND_FROM_EMAIL,
-      sendVerificationRequest: async ({ identifier, url }) => {
-        await sendVerificationEmail({ to: identifier, url });
-      },
-    }),
-
-    // ── LinkedIn (primary verification) ────────
-    LinkedInProvider({
-      clientId: process.env.LINKEDIN_CLIENT_ID!,
-      clientSecret: process.env.LINKEDIN_CLIENT_SECRET!,
-      authorization: {
-        params: { scope: "openid profile email" },
-      },
-    }),
-
-    // ── GitHub ──────────────────────────────────
-    GitHubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-    }),
-
-    // ── Google ──────────────────────────────────
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-
-    // ── Twitter / X ─────────────────────────────
-    TwitterProvider({
-      clientId: process.env.TWITTER_CLIENT_ID!,
-      clientSecret: process.env.TWITTER_CLIENT_SECRET!,
-      version: "2.0",
-    }),
-  ],
+  providers,
   callbacks: {
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
         token.plan = (user as any).plan ?? "FREE";
       }
-      // When a new OAuth account is connected, mark as verified
       if (account?.provider && user?.id) {
         await updateVerification(user.id, account.provider);
       }
@@ -82,30 +88,25 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    async signIn({ user, account }) {
-      // Block sign-in if email is not verified for email provider
+    async signIn({ account }) {
       if (account?.provider === "email") {
-        return true; // NextAuth handles this
+        return true;
       }
-      // Always allow OAuth sign-ins
       return true;
     },
   },
   events: {
     async createUser({ user }) {
-      // Create verification record for new user
       await prisma.verification.create({
         data: { userId: user.id!, level: 0 },
       });
     },
     async linkAccount({ user, account }) {
-      // Update verification when account is linked
       await updateVerification(user.id!, account.provider);
     },
   },
 };
 
-// ── Helpers ───────────────────────────────────
 async function updateVerification(userId: string, provider: string) {
   const update: Record<string, boolean> = {};
 
@@ -122,7 +123,6 @@ async function updateVerification(userId: string, provider: string) {
     create: { userId, ...update },
   });
 
-  // Calculate level
   const verified = [
     verification.linkedinVerified,
     verification.githubVerified,

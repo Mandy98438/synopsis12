@@ -1,98 +1,95 @@
-// ─────────────────────────────────────────────
-// KARD — Security Middleware (Arcjet)
-// Protects all routes from day 1:
-//   - Bot detection
-//   - Rate limiting
-//   - Shield (attack protection)
-// ─────────────────────────────────────────────
-
-import arcjet, { shield, tokenBucket, detectBot } from "@arcjet/next";
+import arcjet, { detectBot, shield, tokenBucket } from "@arcjet/next";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// ── Base Arcjet instance ──────────────────────
-const aj = arcjet({
-  key: process.env.ARCJET_KEY!,
-  rules: [
-    // Shield: blocks SQLi, XSS, path traversal, etc.
-    shield({ mode: "LIVE" }),
-  ],
-});
+const arcjetKey = process.env.ARCJET_KEY;
+const arcjetEnabled = Boolean(arcjetKey && !arcjetKey.includes("placeholder"));
 
-// ── API rate limiter ──────────────────────────
-export const apiLimiter = arcjet({
-  key: process.env.ARCJET_KEY!,
-  characteristics: ["userId"], // per-user limiting
-  rules: [
-    shield({ mode: "LIVE" }),
-    tokenBucket({
-      mode: "LIVE",
-      refillRate: 20,    // 20 requests
-      interval: 60,     // per minute
-      capacity: 40,
-    }),
-  ],
-});
+const aj = arcjetEnabled
+  ? arcjet({
+      key: arcjetKey!,
+      rules: [
+        shield({ mode: "LIVE" }),
+      ],
+    })
+  : null;
 
-// ── Card creation limiter (stricter) ─────────
-export const cardCreateLimiter = arcjet({
-  key: process.env.ARCJET_KEY!,
-  characteristics: ["userId"],
-  rules: [
-    shield({ mode: "LIVE" }),
-    tokenBucket({
-      mode: "LIVE",
-      refillRate: 3,     // 3 card creates
-      interval: 3600,   // per hour
-      capacity: 3,
-    }),
-  ],
-});
+const apiLimiter = arcjetEnabled
+  ? arcjet({
+      key: arcjetKey!,
+      characteristics: ["userId"],
+      rules: [
+        shield({ mode: "LIVE" }),
+        tokenBucket({
+          mode: "LIVE",
+          refillRate: 20,
+          interval: 60,
+          capacity: 40,
+        }),
+      ],
+    })
+  : null;
 
-// ── Public card viewer limiter ────────────────
-export const viewerLimiter = arcjet({
-  key: process.env.ARCJET_KEY!,
-  characteristics: ["ip.src"],
-  rules: [
-    shield({ mode: "LIVE" }),
-    detectBot({
-      mode: "LIVE",
-      allow: ["CATEGORY:SEARCH_ENGINE"], // allow Google, Bing indexing
-    }),
-    tokenBucket({
-      mode: "LIVE",
-      refillRate: 60,
-      interval: 60,
-      capacity: 120,
-    }),
-  ],
-});
+const cardCreateLimiter = arcjetEnabled
+  ? arcjet({
+      key: arcjetKey!,
+      characteristics: ["userId"],
+      rules: [
+        shield({ mode: "LIVE" }),
+        tokenBucket({
+          mode: "LIVE",
+          refillRate: 3,
+          interval: 3600,
+          capacity: 3,
+        }),
+      ],
+    })
+  : null;
 
-// ── Auth limiter ──────────────────────────────
-export const authLimiter = arcjet({
-  key: process.env.ARCJET_KEY!,
-  characteristics: ["ip.src"],
-  rules: [
-    shield({ mode: "LIVE" }),
-    tokenBucket({
-      mode: "LIVE",
-      refillRate: 5,
-      interval: 60,
-      capacity: 10,
-    }),
-  ],
-});
+const viewerLimiter = arcjetEnabled
+  ? arcjet({
+      key: arcjetKey!,
+      characteristics: ["ip.src"],
+      rules: [
+        shield({ mode: "LIVE" }),
+        detectBot({
+          mode: "LIVE",
+          allow: ["CATEGORY:SEARCH_ENGINE"],
+        }),
+        tokenBucket({
+          mode: "LIVE",
+          refillRate: 60,
+          interval: 60,
+          capacity: 120,
+        }),
+      ],
+    })
+  : null;
 
-// ── Middleware export ─────────────────────────
+const authLimiter = arcjetEnabled
+  ? arcjet({
+      key: arcjetKey!,
+      characteristics: ["ip.src"],
+      rules: [
+        shield({ mode: "LIVE" }),
+        tokenBucket({
+          mode: "LIVE",
+          refillRate: 5,
+          interval: 60,
+          capacity: 10,
+        }),
+      ],
+    })
+  : null;
+
 export async function middleware(request: NextRequest) {
-  if (!process.env.ARCJET_KEY || process.env.ARCJET_KEY.includes("placeholder")) {
+  if (!aj || !apiLimiter || !cardCreateLimiter || !viewerLimiter || !authLimiter) {
     return NextResponse.next();
   }
 
   const { pathname } = request.nextUrl;
   let decision;
 
-  // Dynamically select and protect using the defined rate limiters per route
   if (pathname.startsWith("/api/auth")) {
     decision = await (authLimiter as any).protect(request);
   } else if (pathname.startsWith("/api/trpc/kard.create")) {
@@ -109,18 +106,18 @@ export async function middleware(request: NextRequest) {
     if (decision.reason.isRateLimit()) {
       return NextResponse.json(
         { success: false, error: { code: "RATE_LIMITED", message: "Too many requests" } },
-        { status: 429 }
+        { status: 429 },
       );
     }
     if (decision.reason.isBot()) {
       return NextResponse.json(
         { success: false, error: { code: "BOT_DETECTED", message: "Automated requests not allowed" } },
-        { status: 403 }
+        { status: 403 },
       );
     }
     return NextResponse.json(
       { success: false, error: { code: "FORBIDDEN", message: "Request blocked" } },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
