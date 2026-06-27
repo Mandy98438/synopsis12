@@ -2,6 +2,13 @@ import type { Metadata, Viewport } from "next";
 import { Providers } from "@/components/providers";
 import "@/styles/globals.css";
 import "@/styles/animations.css";
+import { Roboto_Mono } from "next/font/google";
+
+const robotoMono = Roboto_Mono({
+  subsets: ["latin"],
+  variable: "--font-roboto-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: { default: "Kard — One card. Every connection.", template: "%s — Kard" },
@@ -17,8 +24,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="bg-white text-black antialiased">
+    <html lang="en" suppressHydrationWarning className={robotoMono.variable}>
+      <body className="bg-white text-black antialiased font-mono">
         <Providers>{children}</Providers>
       </body>
     </html>

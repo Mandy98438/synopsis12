@@ -110,6 +110,7 @@ export function CardBuilder({
 }: CardBuilderProps) {
   const router = useRouter();
   const { toast } = useToast();
+  const [previewExpanded, setPreviewExpanded] = useState(false);
 
   const [form, setForm] = useState<FormState>(
     kard
@@ -391,7 +392,10 @@ export function CardBuilder({
 
       <div className="flex flex-1 overflow-hidden">
         {/* Form */}
-        <div className="flex-1 overflow-y-auto">
+        <div className={cn(
+          "flex-1 overflow-y-auto transition-all duration-300 ease-in-out",
+          previewExpanded ? "hidden md:flex md:flex-1 md:opacity-50" : "flex-1"
+        )}>
           {/* Tabs */}
           <div className="flex border-b border-[#e5e5e5] px-6 bg-white">
             {["identity", "links", "mode"].map((s) => (
@@ -803,13 +807,34 @@ export function CardBuilder({
         </div>
 
         {/* Preview panel */}
-        <div className="w-[260px] flex-shrink-0 border-l border-[#e5e5e5] bg-white flex flex-col items-center py-6 px-4 gap-4 overflow-y-auto">
-          <p className="text-[10px] text-[#888] uppercase font-medium self-start">
-            Live preview
-          </p>
-            <div className="relative">
+        <div className={cn(
+          "border-l border-[#e5e5e5] bg-white flex flex-col items-center py-6 px-4 gap-4 overflow-y-auto transition-all duration-300 ease-in-out",
+          previewExpanded ? "w-[70%] flex-1" : "w-[320px] flex-shrink-0"
+        )}>
+          <div className="flex items-center justify-between w-full">
+            <p className="text-[10px] text-[#888] uppercase font-medium">
+              Live preview
+            </p>
+            <button
+              onClick={() => setPreviewExpanded(!previewExpanded)}
+              className="text-[10px] text-[#ff6600] font-medium hover:underline flex items-center gap-1"
+            >
+              {previewExpanded ? "Collapse" : "Expand"}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                {previewExpanded ? (
+                  <path d="M18 15l-6-6-6 6" />
+                ) : (
+                  <path d="M6 9l6 6 6-6" />
+                )}
+              </svg>
+            </button>
+          </div>
+            <div className={cn(
+              "relative w-full flex items-center justify-center transition-transform duration-300 ease-in-out",
+              previewExpanded ? "scale-110" : "scale-100"
+            )}>
               <div
-                className="pointer-events-none absolute inset-0 -m-1 z-0 transition-opacity duration-300 rounded-[28px]"
+                className="pointer-events-none absolute inset-0 -m-2 z-0 transition-opacity duration-300 rounded-[32px]"
                 style={{ opacity: isSaving ? 1 : 0 }}
               >
                 <GlowEffect
@@ -819,7 +844,7 @@ export function CardBuilder({
                   duration={3}
                 />
               </div>
-              <div className="relative z-10">
+              <div className="relative z-10 w-full max-w-[340px]">
                 <KardCard
                   name={`${form.firstName || "Your"} ${form.lastName || "Name"}`}
                   role={form.headline || "Your headline"}

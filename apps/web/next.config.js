@@ -8,6 +8,7 @@ const nextConfig = {
       { protocol: "https", hostname: "media.licdn.com" },
       { protocol: "https", hostname: "lh3.googleusercontent.com" }, // Google avatars
       { protocol: "https", hostname: "pbs.twimg.com" },             // Twitter avatars
+      { protocol: "https", hostname: "upload.wikimedia.org" },      // Wikipedia images
     ],
   },
   async headers() {
@@ -29,7 +30,7 @@ const nextConfig = {
               "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
               "style-src 'self' 'unsafe-inline'",
               // FIX: Added Cloudinary + Google + Twitter avatar hosts
-              "img-src 'self' data: blob: https://res.cloudinary.com https://avatars.githubusercontent.com https://media.licdn.com https://lh3.googleusercontent.com https://pbs.twimg.com",
+              "img-src 'self' data: blob: https://res.cloudinary.com https://avatars.githubusercontent.com https://media.licdn.com https://lh3.googleusercontent.com https://pbs.twimg.com https://upload.wikimedia.org https://images.unsplash.com",
               // FIX: Added Cloudinary upload API + Upstash — were blocked by 'self' only
               "connect-src 'self' https://api.cloudinary.com https://*.upstash.io wss://*.upstash.io",
               "font-src 'self'",

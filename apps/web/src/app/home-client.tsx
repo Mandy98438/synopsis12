@@ -6,6 +6,7 @@ import { TextLoop } from "@/components/core/text-loop";
 import { InView } from "@/components/core/in-view";
 import { Spotlight } from "@/components/core/spotlight";
 import { ProgressiveBlur } from "@/components/core/progressive-blur";
+import KardDemoCarousel from "@/components/kard/kard-demo-carousel";
 import { motion } from "motion/react";
 import { 
   CreditCard, 
@@ -139,7 +140,7 @@ export default function HomeClient() {
             </div>
 
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/70 md:text-xl">
-              Share your complete identity instantly with a single link or QR code. No app needed.
+              One link. One impact. Everlasting impression. No app needed.
             </p>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <Link href="/auth/signin" className="glow-cta inline-flex items-center justify-center rounded-[24px] bg-[#ff6600] px-9 py-3.5 text-base font-medium text-white shadow-[var(--shadow-sm)]">
@@ -151,7 +152,7 @@ export default function HomeClient() {
             </div>
           </div>
 
-          {/* Premium Preview Kard */}
+          {/* Premium Preview Kard - Carousel */}
           <div className="relative mx-auto w-full max-w-[430px]">
             <div className="absolute -right-8 -top-8 h-44 w-44 rounded-full border border-[#aa8855]/40" />
             <div className="absolute -bottom-10 -left-10 h-56 w-56 rounded-full border border-[#5c2999]/35" />
@@ -160,31 +161,7 @@ export default function HomeClient() {
                 className="from-orange-500/10 via-orange-600/5 to-transparent blur-2xl"
                 size={140}
               />
-              <div className="rounded-[21.6px] bg-black p-4 text-white relative overflow-hidden">
-                <div className="mb-20 flex items-center justify-between">
-                  <KardLogo size="sm" isDark muted />
-                  <span className="rounded-full bg-white/10 px-3 py-1 text-xs">kard.io/maya</span>
-                </div>
-                <div className="space-y-3 relative z-10">
-                  <div className="relative h-12 w-12 rounded-full overflow-hidden bg-[#ff6600]">
-                    <ProgressiveBlur 
-                      className="pointer-events-none absolute bottom-0 left-0 h-1/2 w-full z-10"
-                      blurIntensity={3}
-                    />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-medium">Maya Chen</p>
-                    <p className="text-sm text-white/55">Product Designer</p>
-                  </div>
-                </div>
-              </div>
-              <div className="pop-grid mt-4 grid grid-cols-3 gap-3">
-                {["QR", "Links", "Verify"].map((item) => (
-                  <div key={item} className="spotlight-card rounded-2xl bg-white p-3 text-center text-sm font-medium shadow-[var(--shadow-sm)]">
-                    {item}
-                  </div>
-                ))}
-              </div>
+              <KardDemoCarousel />
             </div>
           </div>
         </div>
