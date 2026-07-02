@@ -5,16 +5,16 @@ import { KardLogo } from "@/components/kard/kard-logo";
 import { TextLoop } from "@/components/core/text-loop";
 import { InView } from "@/components/core/in-view";
 import { Spotlight } from "@/components/core/spotlight";
-import { ProgressiveBlur } from "@/components/core/progressive-blur";
 import KardDemoCarousel from "@/components/kard/kard-demo-carousel";
+import Masonry from "@/components/core/Masonry";
 import { motion } from "motion/react";
-import { 
-  CreditCard, 
-  ShieldCheck, 
-  QrCode, 
-  EyeOff, 
-  BarChart3, 
-  SunMoon 
+import {
+  CreditCard,
+  ShieldCheck,
+  QrCode,
+  EyeOff,
+  BarChart3,
+  SunMoon
 } from "lucide-react";
 
 const steps = [
@@ -68,319 +68,265 @@ const features = [
   },
 ];
 
+const masonryItems = [
+  { id: "1",  img: "/masonry/content1.png",  url: "#", height: 520 },
+  { id: "2",  img: "/masonry/content2.png",  url: "#", height: 380 },
+  { id: "3",  img: "/masonry/content3.png",  url: "#", height: 460 },
+  { id: "4",  img: "/masonry/content4.png",  url: "#", height: 340 },
+  { id: "5",  img: "/masonry/content5.png",  url: "#", height: 500 },
+  { id: "6",  img: "/masonry/content6.png",  url: "#", height: 420 },
+  { id: "7",  img: "/masonry/content7.png",  url: "#", height: 360 },
+  { id: "8",  img: "/masonry/content8.png",  url: "#", height: 480 },
+  { id: "9",  img: "/masonry/content9.png",  url: "#", height: 440 },
+  { id: "10", img: "/masonry/content10.png", url: "#", height: 390 },
+];
+
 export default function HomeClient() {
   return (
-    <main className="page-reveal min-h-screen bg-white text-black">
-      <nav className="kard-container flex items-center justify-between py-6">
-        <KardLogo size="md" isDark={false} />
-        <div className="hidden items-center gap-7 text-sm text-black/70 sm:flex">
-          <Link href="/demo" className="hover:text-black">Demo</Link>
-          <Link href="/privacy" className="hover:text-black">Privacy</Link>
-          <Link href="/terms" className="hover:text-black">Terms</Link>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link href="/auth/signin" className="hidden rounded-lg border border-black px-4 py-2 text-sm font-medium sm:inline-flex">
-            Sign in
-          </Link>
-          <Link href="/auth/signin" className="glow-cta rounded-[24px] bg-[#ff6600] px-5 py-2.5 text-sm font-medium text-white shadow-[var(--shadow-sm)]">
-            Get started
-          </Link>
-        </div>
-      </nav>
+    <main className="page-reveal min-h-screen bg-white text-black pt-24 md:pt-28">
 
-      {/* Hero Section */}
-      <section className="kard-container overflow-hidden rounded-b-[24px] bg-black text-white">
-        <div className="kard-arc grid min-h-[620px] items-center gap-12 px-6 py-20 md:grid-cols-[1.05fr_0.95fr] md:px-16">
-          <div>
-            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm text-white/70">
-              <span className="h-2 w-2 rounded-full bg-[#00cc88]" />
-              Digital identity cards for the real world
-            </div>
-            <h1 className="max-w-3xl text-5xl font-medium leading-none md:text-7xl">
-              One card. Every connection.
-            </h1>
-            
-            {/* Custom spring variants text loop */}
-            <div className="mt-5 text-sm text-white/65 md:text-base flex items-center gap-1.5 justify-start">
-              <span>Built for</span>
-              <TextLoop
-                className="font-medium text-white overflow-y-clip h-6"
-                transition={{
-                  type: "spring",
-                  stiffness: 900,
-                  damping: 80,
-                  mass: 10,
-                }}
-                variants={{
-                  initial: {
-                    y: 20,
-                    rotateX: 90,
-                    opacity: 0,
-                    filter: "blur(4px)",
-                  },
-                  animate: {
-                    y: 0,
-                    rotateX: 0,
-                    opacity: 1,
-                    filter: "blur(0px)",
-                  },
-                  exit: {
-                    y: -20,
-                    rotateX: -90,
-                    opacity: 0,
-                    filter: "blur(4px)",
-                  },
-                }}
-              >
-                <span>LinkedIn</span>
-                <span>GitHub</span>
-                <span>Twitter</span>
-                <span>real-world intros</span>
-              </TextLoop>
+      {/* ── Hero ── */}
+      <section className="px-6 md:px-12 lg:px-24 py-20 md:py-28 bg-black text-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="kard-arc grid min-h-[620px] items-center gap-12 md:grid-cols-[1.05fr_0.95fr]">
+            <div className="flex flex-col gap-6 max-w-lg">
+              <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-xs font-semibold tracking-widest uppercase text-orange-500">
+                <span className="h-2 w-2 rounded-full bg-[#00cc88]" />
+                Digital identity cards for the real world
+              </div>
+              <h1 className="max-w-3xl text-5xl font-black tracking-tight leading-tight md:text-7xl">
+                One card. Every connection.
+              </h1>
+              <div className="mt-5 text-sm text-white/65 md:text-base flex items-center gap-1.5 justify-start">
+                <span>Built for</span>
+                <TextLoop
+                  className="font-medium text-white overflow-y-clip h-6"
+                  transition={{ type: "spring", stiffness: 900, damping: 80, mass: 10 }}
+                  variants={{
+                    initial: { y: 20, rotateX: 90, opacity: 0, filter: "blur(4px)" },
+                    animate: { y: 0, rotateX: 0, opacity: 1, filter: "blur(0px)" },
+                    exit: { y: -20, rotateX: -90, opacity: 0, filter: "blur(4px)" },
+                  }}
+                >
+                  <span>LinkedIn</span>
+                  <span>GitHub</span>
+                  <span>Twitter</span>
+                  <span>real-world intros</span>
+                </TextLoop>
+              </div>
+              <p className="mt-6 max-w-xl text-base md:text-lg text-gray-400 leading-relaxed">
+                One link. One impact. Everlasting impression. No app needed.
+              </p>
+              <div className="mt-10 flex gap-4 items-center flex-wrap">
+                <Link href="/auth/signin" className="glow-cta inline-flex items-center justify-center rounded-full bg-[#ff6600] px-8 py-3 text-base font-semibold text-white shadow-[var(--shadow-sm)]">
+                  Create your Kard
+                </Link>
+                <Link href="/demo" className="inline-flex items-center justify-center rounded-full border border-white/35 px-6 py-3 text-base font-medium text-white">
+                  View demo
+                </Link>
+              </div>
             </div>
 
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/70 md:text-xl">
-              One link. One impact. Everlasting impression. No app needed.
-            </p>
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-              <Link href="/auth/signin" className="glow-cta inline-flex items-center justify-center rounded-[24px] bg-[#ff6600] px-9 py-3.5 text-base font-medium text-white shadow-[var(--shadow-sm)]">
-                Create your Kard
-              </Link>
-              <Link href="/demo" className="inline-flex items-center justify-center rounded-lg border border-white/35 px-6 py-3 text-base font-medium text-white">
-                View demo
-              </Link>
-            </div>
-          </div>
-
-          {/* Premium Preview Kard - Carousel */}
-          <div className="relative mx-auto w-full max-w-[430px]">
-            <div className="absolute -right-8 -top-8 h-44 w-44 rounded-full border border-[#aa8855]/40" />
-            <div className="absolute -bottom-10 -left-10 h-56 w-56 rounded-full border border-[#5c2999]/35" />
-            <div className="spotlight-card inview-pop relative rounded-[24px] bg-[#f6f3ee] p-5 text-black shadow-[rgba(0,0,0,0.5)_0px_16px_32px_0px] overflow-hidden">
-              <Spotlight 
-                className="from-orange-500/10 via-orange-600/5 to-transparent blur-2xl"
-                size={140}
-              />
-              <KardDemoCarousel />
+            <div className="relative mx-auto w-full max-w-[430px]">
+              <div className="absolute -right-8 -top-8 h-44 w-44 rounded-full border border-[#aa8855]/40" />
+              <div className="absolute -bottom-10 -left-10 h-56 w-56 rounded-full border border-[#5c2999]/35" />
+              <div className="spotlight-card inview-pop relative rounded-[24px] bg-[#f6f3ee] p-5 text-black shadow-[rgba(0,0,0,0.5)_0px_16px_32px_0px] overflow-hidden">
+                <Spotlight
+                  className="from-orange-500/10 via-orange-600/5 to-transparent blur-2xl"
+                  size={140}
+                />
+                <KardDemoCarousel />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <InView
-        variants={{
-          hidden: { opacity: 0, y: 100, filter: "blur(4px)" },
-          visible: { opacity: 1, y: 0, filter: "blur(0px)" },
-        }}
-        viewOptions={{ margin: "0px 0px -200px 0px", once: true }}
-        transition={{ duration: 0.4, ease: "easeInOut" }}
-        as="section"
-        className="section-reveal bg-[#f6f3ee] py-20"
-      >
-        <div className="kard-container">
-          <p className="mb-10 text-center text-sm text-[#888]">How it works</p>
+      {/* ── How It Works ── */}
+      <section className="px-6 md:px-12 lg:px-24 py-20 md:py-28 bg-[#f6f3ee]">
+        <div className="max-w-6xl mx-auto">
+          <p className="mb-10 text-center text-xs font-semibold tracking-widest uppercase text-orange-500">How it works</p>
           <InView
             viewOptions={{ once: true, margin: "0px 0px -150px 0px" }}
             variants={{
               hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: { staggerChildren: 0.1 }
-              }
+              visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
             }}
           >
-            <div className="pop-grid grid gap-5 md:grid-cols-3">
+            <div className="pop-grid grid grid-cols-1 md:grid-cols-3 gap-8">
               {steps.map((item) => (
-                <motion.div 
+                <motion.div
                   key={item.step}
                   variants={{
                     hidden: { opacity: 0, scale: 0.9, y: 30, filter: "blur(8px)" },
                     visible: { opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }
                   }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="spotlight-card rounded-[24px] bg-white p-8 shadow-[var(--shadow-xl)]"
+                  className="spotlight-card rounded-2xl border border-gray-100 p-8 flex flex-col gap-3 shadow-[var(--shadow-xl)] hover:scale-[1.02] transition-transform duration-200"
                 >
-                  <p className="mb-5 text-sm font-medium text-[#ff6600]">{item.step}</p>
-                  <h3 className="mb-3 text-2xl font-medium">{item.title}</h3>
-                  <p className="text-base leading-relaxed text-[#666]">{item.desc}</p>
+                  <p className="text-orange-500 text-sm font-bold">{item.step}</p>
+                  <h3 className="text-xl font-semibold">{item.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
                 </motion.div>
               ))}
             </div>
           </InView>
         </div>
-      </InView>
+      </section>
 
-      {/* Features Section */}
-      <InView
-        variants={{
-          hidden: { opacity: 0, y: 100, filter: "blur(4px)" },
-          visible: { opacity: 1, y: 0, filter: "blur(0px)" },
-        }}
-        viewOptions={{ margin: "0px 0px -200px 0px", once: true }}
-        transition={{ duration: 0.4, ease: "easeInOut" }}
-        as="section"
-        className="section-reveal kard-container py-20"
-      >
-        <div className="accent-bar w-7 h-[3px] bg-[#ff6600] rounded-sm mb-4" />
-        <p className="mb-2 text-xs tracking-widest uppercase text-[#888]">Everything you need</p>
-        <h1 className="max-w-2xl text-4xl font-medium leading-tight text-black mb-3">
-          A polished identity surface<br />that stays <span className="text-[#ff6600]">yours.</span>
-        </h1>
-        <p className="text-sm text-[#666] mb-10 max-w-[480px]">
-          One card. One link. Every context — from a first handshake to a portfolio share. Always up to date, never out of print.
-        </p>
-
-        <InView
-          viewOptions={{ once: true, margin: "0px 0px -150px 0px" }}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: { staggerChildren: 0.08 }
-            }
-          }}
-        >
-          <div className="pop-grid grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature) => (
-              <motion.div
-                key={feature.title}
-                variants={{
-                  hidden: { opacity: 0, scale: 0.92, y: 25, filter: "blur(6px)" },
-                  visible: { opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }
-                }}
-                transition={{ duration: 0.35, ease: "easeOut" }}
-                className={`${feature.tone} feature-reveal-card spotlight-card kard-arc min-h-[190px] rounded-[18px] border border-[#e5e5e5] p-5 relative overflow-hidden`}
-              >
-                <Spotlight 
-                  className="from-orange-500/10 via-orange-600/5 to-transparent blur-xl"
-                  size={120}
-                />
-                <div className="feature-icon mb-5 flex h-10 w-10 items-center justify-center rounded-[14px] bg-white text-[#888] shadow-[var(--shadow-sm)] relative z-10">
-                  <feature.icon className="h-5 w-5" />
-                </div>
-                <h3 className="mb-3 text-base font-medium leading-snug relative z-10">{feature.title}</h3>
-                <div className="feature-text-block relative z-10">
-                  <p className="feature-short text-sm leading-relaxed text-[#666]">{feature.short}</p>
-                  <p className="feature-full text-sm leading-relaxed text-[#666]">{feature.full}</p>
-                </div>
-              </motion.div>
-            ))}
+      {/* ── Features ── */}
+      <section className="px-6 md:px-12 lg:px-24 py-20 md:py-28 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="accent-bar w-7 h-[3px] bg-[#ff6600] rounded-sm mb-4" />
+          <p className="mb-2 text-xs font-semibold tracking-widest uppercase text-orange-500">Everything you need</p>
+          <h2 className="max-w-2xl text-3xl md:text-4xl font-bold tracking-tight leading-tight text-black mb-3">
+            A polished identity surface<br />that stays <span className="text-[#ff6600]">yours.</span>
+          </h2>
+          <p className="text-base md:text-lg text-gray-500 mb-10 max-w-xl">
+            One card. One link. Every context — from a first handshake to a portfolio share. Always up to date, never out of print.
+          </p>
+          <InView
+            viewOptions={{ once: true, margin: "0px 0px -150px 0px" }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
+            }}
+          >
+            <div className="pop-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {features.map((feature) => (
+                <motion.div
+                  key={feature.title}
+                  variants={{
+                    hidden: { opacity: 0, scale: 0.92, y: 25, filter: "blur(6px)" },
+                    visible: { opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }
+                  }}
+                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  className={`${feature.tone} feature-reveal-card spotlight-card kard-arc rounded-2xl p-6 flex flex-col gap-3 min-h-[180px] border border-[#e5e5e5] relative overflow-hidden hover:scale-[1.02] transition-transform duration-200`}
+                >
+                  <Spotlight
+                    className="from-orange-500/10 via-orange-600/5 to-transparent blur-xl"
+                    size={120}
+                  />
+                  <div className="feature-icon flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#888] shadow-[var(--shadow-sm)] relative z-10">
+                    <feature.icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="font-semibold text-base relative z-10">{feature.title}</h3>
+                  <div className="feature-text-block relative z-10 mt-auto">
+                    <p className="feature-short text-sm leading-relaxed text-gray-500">{feature.short}</p>
+                    <p className="feature-full text-sm leading-relaxed text-gray-500">{feature.full}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </InView>
+          <div className="flex items-center gap-3 mt-10">
+            <Link href="/auth/signin" className="glow-cta inline-flex items-center justify-center rounded-full bg-[#ff6600] px-7 py-3 text-sm font-medium text-white shadow-[var(--shadow-sm)]">
+              Start free ↗
+            </Link>
+            <Link href="/demo" className="inline-flex items-center justify-center rounded-full border border-[#e5e5e5] px-6 py-3 text-sm font-medium text-[#666] hover:text-black transition-colors bg-transparent">
+              See how it works
+            </Link>
           </div>
-        </InView>
-
-        <div className="flex items-center gap-3 mt-10">
-          <Link href="/auth/signin" className="glow-cta inline-flex items-center justify-center rounded-[24px] bg-[#ff6600] px-7 py-3 text-sm font-medium text-white shadow-[var(--shadow-sm)]">
-            Start free ↗
-          </Link>
-          <Link href="/demo" className="inline-flex items-center justify-center rounded-[24px] border border-[#e5e5e5] px-6 py-3 text-sm font-medium text-[#666] hover:text-black transition-colors bg-transparent">
-            See how it works
-          </Link>
+          <p className="text-xs text-[#888] mt-3">No credit card required &nbsp;·&nbsp; Free tier includes 2 cards</p>
         </div>
-        <p className="text-xs text-[#888] mt-3">No credit card required &nbsp;·&nbsp; Free tier includes 2 cards</p>
-      </InView>
+      </section>
 
-      {/* Privacy Section */}
-      <InView
-        variants={{
-          hidden: { opacity: 0, y: 100, filter: "blur(4px)" },
-          visible: { opacity: 1, y: 0, filter: "blur(0px)" },
-        }}
-        viewOptions={{ margin: "0px 0px -200px 0px", once: true }}
-        transition={{ duration: 0.4, ease: "easeInOut" }}
-        as="section"
-        className="bg-[#ebfef6] py-20"
-      >
-        <div className="kard-container text-center">
-          <p className="mb-4 text-sm text-[#00a66f]">Privacy first</p>
-          <h2 className="mx-auto max-w-2xl text-4xl font-medium leading-tight">We collect zero data about your viewers.</h2>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-[#555]">
+      {/* ── Masonry Showcase ── */}
+      <section className="px-6 md:px-12 lg:px-24 py-20 md:py-28 bg-[#f6f3ee]">
+        <div className="max-w-6xl mx-auto">
+          <p className="mb-2 text-xs font-semibold tracking-widest uppercase text-orange-500">Kards in the wild</p>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight text-black mb-10">
+            Real people. Real connections.
+          </h2>
+          <div style={{ height: "800px" }}>
+            <Masonry
+              items={masonryItems}
+              animateFrom="bottom"
+              scaleOnHover={true}
+              hoverScale={1.05}
+              blurToFocus={true}
+              colorShiftOnHover={false}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ── Privacy ── */}
+      <section className="px-6 md:px-12 lg:px-24 py-20 md:py-28 bg-black text-white">
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="mb-4 text-xs font-semibold tracking-widest uppercase text-orange-500">Privacy first</p>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight">
+            We collect zero data about your viewers.
+          </h2>
+          <p className="mt-5 text-base md:text-lg leading-relaxed text-gray-400">
             No cookies. No tracking. No fingerprinting. When someone views your Kard, nothing is collected about them.
           </p>
         </div>
-      </InView>
+      </section>
 
-      {/* Pricing Section */}
-      <InView
-        variants={{
-          hidden: { opacity: 0, y: 100, filter: "blur(4px)" },
-          visible: { opacity: 1, y: 0, filter: "blur(0px)" },
-        }}
-        viewOptions={{ margin: "0px 0px -200px 0px", once: true }}
-        transition={{ duration: 0.4, ease: "easeInOut" }}
-        as="section"
-        className="kard-container py-20"
-      >
-        <p className="mb-10 text-center text-sm text-[#888]">Pricing</p>
-        <div className="mx-auto grid max-w-3xl gap-5 sm:grid-cols-2">
-          <div className="rounded-[24px] bg-[#f6f3ee] p-8 relative overflow-hidden">
-            <Spotlight 
-              className="from-zinc-400/10 to-transparent blur-xl"
-              size={150}
-            />
-            <p className="font-medium">Free</p>
-            <p className="my-4 text-5xl font-medium">Rs. 0</p>
-            <div className="mb-8 space-y-3">
-              {["1 Kard", "QR + short code", "LinkedIn verification", "3 card modes", "Save contact"].map((f) => (
-                <div key={f} className="flex items-center gap-3 text-sm text-[#555]">
-                  <span className="h-2 w-2 rounded-full bg-[#00cc88]" />{f}
-                </div>
-              ))}
+      {/* ── Pricing ── */}
+      <section className="px-6 md:px-12 lg:px-24 py-20 md:py-28 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <p className="mb-10 text-center text-xs font-semibold tracking-widest uppercase text-orange-500">Pricing</p>
+          <div className="mx-auto grid max-w-3xl gap-6 grid-cols-1 md:grid-cols-2">
+            <div className="rounded-2xl border border-gray-200 p-8 relative overflow-hidden hover:scale-[1.02] transition-transform duration-200">
+              <Spotlight className="from-zinc-400/10 to-transparent blur-xl" size={150} />
+              <p className="font-medium">Free</p>
+              <p className="my-4 text-4xl font-black">Rs. 0</p>
+              <div className="mb-8 space-y-2">
+                {["1 Kard", "QR + short code", "LinkedIn verification", "3 card modes", "Save contact"].map((f) => (
+                  <div key={f} className="flex items-center gap-3 text-sm text-[#555]">
+                    <span className="h-2 w-2 rounded-full bg-[#00cc88]" />{f}
+                  </div>
+                ))}
+              </div>
+              <Link href="/auth/signin" className="block rounded-full border border-black px-5 py-3 text-center text-sm font-medium bg-white hover:bg-neutral-50 transition-colors">
+                Get started free
+              </Link>
             </div>
-            <Link href="/auth/signin" className="block rounded-[24px] border border-black px-5 py-3 text-center text-sm font-medium bg-white hover:bg-neutral-50 transition-colors">
-              Get started free
-            </Link>
-          </div>
-          <div className="relative overflow-hidden rounded-[24px] bg-black p-8 text-white">
-            <div className="absolute inset-x-0 top-0 h-1 bg-[#ff6600]" />
-            <Spotlight 
-              className="from-orange-500/15 via-orange-600/5 to-transparent blur-xl"
-              size={150}
-            />
-            <p className="font-medium text-white/75">Pro</p>
-            <p className="my-4 text-5xl font-medium">Soon</p>
-            <div className="mb-8 space-y-3">
-              {["Everything in Free", "Multiple Kards", "Full analytics", "Custom themes", "Priority support"].map((f) => (
-                <div key={f} className="flex items-center gap-3 text-sm text-white/65">
-                  <span className="h-2 w-2 rounded-full bg-[#ff6600]" />{f}
-                </div>
-              ))}
-            </div>
-            <div className="rounded-[24px] bg-white/10 px-5 py-3 text-center text-sm font-medium text-white">
-              Coming soon
+            <div className="relative overflow-hidden rounded-2xl bg-black p-8 text-white hover:scale-[1.02] transition-transform duration-200">
+              <div className="absolute inset-x-0 top-0 h-1 bg-[#ff6600]" />
+              <Spotlight className="from-orange-500/15 via-orange-600/5 to-transparent blur-xl" size={150} />
+              <p className="font-medium text-white/75">Pro</p>
+              <p className="my-4 text-4xl font-black">Soon</p>
+              <div className="mb-8 space-y-2">
+                {["Everything in Free", "Multiple Kards", "Full analytics", "Custom themes", "Priority support"].map((f) => (
+                  <div key={f} className="flex items-center gap-3 text-sm text-white/65">
+                    <span className="h-2 w-2 rounded-full bg-[#ff6600]" />{f}
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-full bg-white/10 px-5 py-3 text-center text-sm font-medium text-white">
+                Coming soon
+              </div>
             </div>
           </div>
         </div>
-      </InView>
+      </section>
 
-      {/* CTA Section */}
-      <InView
-        variants={{
-          hidden: { opacity: 0, y: 100, filter: "blur(4px)" },
-          visible: { opacity: 1, y: 0, filter: "blur(0px)" },
-        }}
-        viewOptions={{ margin: "0px 0px -200px 0px", once: true }}
-        transition={{ duration: 0.4, ease: "easeInOut" }}
-        as="section"
-        className="bg-[#f6f1fe] py-20 text-center"
-      >
-        <div className="kard-container">
-          <h2 className="text-4xl font-medium">Ready to build your Kard?</h2>
-          <p className="mt-4 text-[#666]">Takes 2 minutes. No credit card needed.</p>
-          <Link href="/auth/signin" className="glow-cta mt-8 inline-flex rounded-[24px] bg-[#ff6600] px-9 py-3.5 text-base font-medium text-white shadow-[var(--shadow-sm)]">
+      {/* ── CTA ── */}
+      <section className="px-6 md:px-12 lg:px-24 py-24 bg-black text-white text-center">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-black">Ready to build your Kard?</h2>
+          <p className="mt-4 text-gray-400">Takes 2 minutes. No credit card needed.</p>
+          <Link href="/auth/signin" className="glow-cta mt-8 inline-flex rounded-full bg-orange-500 hover:bg-orange-600 px-8 py-3 text-base font-semibold text-white shadow-[var(--shadow-sm)]">
             Create your Kard
           </Link>
         </div>
-      </InView>
+      </section>
 
-      <footer className="kard-container flex flex-col items-center justify-between gap-4 py-8 sm:flex-row">
-        <KardLogo size="sm" isDark={false} muted />
-        <div className="flex items-center gap-5 text-sm text-[#888]">
-          <Link href="/terms" className="hover:text-black">Terms</Link>
-          <Link href="/privacy" className="hover:text-black">Privacy</Link>
-          <span>2025 Kard</span>
+      {/* ── Footer ── */}
+      <footer className="px-6 md:px-12 lg:px-24 py-8 bg-black text-white">
+        <div className="max-w-6xl mx-auto flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <KardLogo size="sm" isDark={false} muted />
+          <div className="flex items-center gap-5 text-sm text-gray-400">
+            <Link href="/terms" className="hover:text-white">Terms</Link>
+            <Link href="/privacy" className="hover:text-white">Privacy</Link>
+            <span>2025 Kard</span>
+          </div>
         </div>
       </footer>
+
     </main>
   );
 }

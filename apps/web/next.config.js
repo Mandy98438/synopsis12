@@ -9,6 +9,7 @@ const nextConfig = {
       { protocol: "https", hostname: "lh3.googleusercontent.com" }, // Google avatars
       { protocol: "https", hostname: "pbs.twimg.com" },             // Twitter avatars
       { protocol: "https", hostname: "upload.wikimedia.org" },      // Wikipedia images
+      { protocol: "https", hostname: "commons.wikimedia.org" },
     ],
   },
   async headers() {

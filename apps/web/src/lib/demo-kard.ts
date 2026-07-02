@@ -20,7 +20,7 @@ export function getDemoKard() {
     company: "Kard",
     theme: "DARK" as const,
     mode: "PROFESSIONAL" as const,
-    avatarUrl: null,
+    avatarUrl: "/images/spidey.png",
     email: "mayank@kard.io",
     phone: null,
     location: "India",
