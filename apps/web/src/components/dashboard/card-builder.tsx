@@ -13,13 +13,14 @@ import { useRouter } from "next/navigation";
 import { useCreateKard, useUpdateKard } from "@/hooks/use-kard";
 import { useToast } from "@/components/ui"; // ✅ single import — was duplicated before
 import { Input, Textarea, Button, Badge, Spinner } from "@/components/ui";
-import { KardCard } from "@/components/kard/kard-card";
+import { Kard } from "@/components/kard/Kard";
+import { ImageAdjuster } from "@/components/kard/ImageAdjuster";
+import { DEFAULT_IMAGE_TRANSFORM, KARD_MODES, type ImageTransform, type KardMode } from "@/components/kard/kardModes";
 import { cn } from "@/lib/cn";
 import { TextMorph } from "@/components/core/text-morph";
 import { GlowEffect } from "@/components/core/glow-effect";
 
 type CardMode = "minimal" | "professional" | "personal";
-type Theme = "dark" | "light";
 type PlatformType =
   | "linkedin"
   | "github"
@@ -36,7 +37,8 @@ interface LinkInput {
 interface FormState {
   username: string;
   mode: CardMode;
-  theme: Theme;
+  theme: KardMode;
+  imageTransform: ImageTransform;
   firstName: string;
   lastName: string;
   headline: string;
@@ -100,6 +102,16 @@ const MODES = [
   },
 ];
 
+function parseImageTransform(value: unknown): ImageTransform {
+  if (!value || typeof value !== "object") return DEFAULT_IMAGE_TRANSFORM;
+  const transform = value as Partial<ImageTransform>;
+  return {
+    x: Number.isFinite(transform.x) ? Number(transform.x) : 0,
+    y: Number.isFinite(transform.y) ? Number(transform.y) : 0,
+    scale: Number.isFinite(transform.scale) ? Number(transform.scale) : 1,
+  };
+}
+
 // ── Phase 9: Upload progress states ──────────
 type UploadState = "idle" | "uploading" | "success" | "error";
 
@@ -111,13 +123,15 @@ export function CardBuilder({
   const router = useRouter();
   const { toast } = useToast();
   const [previewExpanded, setPreviewExpanded] = useState(false);
+  const [appearanceOpen, setAppearanceOpen] = useState(false);
 
   const [form, setForm] = useState<FormState>(
     kard
       ? {
           username: kard.username ?? "",
           mode: (kard.mode?.toLowerCase() ?? "professional") as CardMode,
-          theme: (kard.theme?.toLowerCase() ?? "dark") as Theme,
+          theme: (kard.theme?.toLowerCase() ?? "dark") as KardMode,
+          imageTransform: parseImageTransform(kard.imageTransform),
           firstName: kard.firstName ?? "",
           lastName: kard.lastName ?? "",
           headline: kard.headline ?? "",
@@ -136,6 +150,7 @@ export function CardBuilder({
           username: "",
           mode: "professional",
           theme: "dark",
+          imageTransform: DEFAULT_IMAGE_TRANSFORM,
           firstName: "",
           lastName: "",
           headline: "",
@@ -328,6 +343,7 @@ export function CardBuilder({
       phone: form.phone.trim(),
       location: form.location.trim(),
       avatarUrl,
+      imageTransform: form.imageTransform,
       links: form.links
         .filter((l) => l.url.trim())
         .map((l) => ({
@@ -732,7 +748,7 @@ export function CardBuilder({
                     Theme
                   </p>
                   <div className="grid grid-cols-2 gap-2">
-                    {(["dark", "light"] as Theme[]).map((t) => (
+                    {(Object.keys(KARD_MODES) as KardMode[]).map((t) => (
                       <button
                         key={t}
                         onClick={() => set("theme", t)}
@@ -748,15 +764,17 @@ export function CardBuilder({
                             "w-8 h-8 rounded-lg border",
                             t === "dark"
                               ? "bg-[#141414] border-[#333]"
-                              : "bg-[#FAF6EF] border-[#ddd]"
+                              : t === "light"
+                              ? "bg-[#FAF6EF] border-[#ddd]"
+                              : "bg-gradient-to-br from-sky-200 to-orange-300 border-white"
                           )}
                         />
                         <div>
                           <p className="text-xs font-medium text-black capitalize">
-                            {t}
+                            {KARD_MODES[t].label}
                           </p>
                           <p className="text-[10px] text-[#888]">
-                            {t === "dark" ? "Dark bg" : "Warm off-white"}
+                            {t === "dark" ? "Dark bg" : t === "light" ? "Warm off-white" : "Photo-tinted glass"}
                           </p>
                         </div>
                       </button>
@@ -845,19 +863,63 @@ export function CardBuilder({
                 />
               </div>
               <div className="relative z-10 w-full max-w-[340px]">
-                <KardCard
+                <Kard
+                  mode={form.theme}
                   name={`${form.firstName || "Your"} ${form.lastName || "Name"}`}
-                  role={form.headline || "Your headline"}
+                  title={form.headline || "Your headline"}
                   company={form.company || ""}
-                  photoUrl={avatarUrl || undefined}
-                  kardId={form.username || "yourname"}
-                  socials={{
+                  imageUrl={avatarUrl || undefined}
+                  imageTransform={form.imageTransform}
+                  barcodeId={form.username || "yourname"}
+                  socialLinks={{
                     linkedin: form.links.find((l) => l.type === "linkedin")?.url,
                     twitter: form.links.find((l) => l.type === "twitter")?.url,
                     github: form.links.find((l) => l.type === "github")?.url,
                   }}
-                  showEdit={false}
+                  showEdit
+                  onEdit={() => setAppearanceOpen((open) => !open)}
                 />
+                {appearanceOpen && (
+                  <div className="absolute left-2 top-10 z-20 w-[300px] rounded-[20px] border border-[#e5e5e5] bg-white p-4 shadow-[0_20px_60px_rgba(0,0,0,0.16)]">
+                    <div className="mb-4 flex items-center justify-between">
+                      <p className="text-[11px] font-medium uppercase text-[#888]">Appearance</p>
+                      <button
+                        type="button"
+                        onClick={() => setAppearanceOpen(false)}
+                        className="grid h-7 w-7 place-items-center rounded-lg text-[#666] hover:bg-[#f6f3ee]"
+                        aria-label="Close appearance editor"
+                      >
+                        ×
+                      </button>
+                    </div>
+                    <div className="mb-4 flex gap-2">
+                      {(Object.keys(KARD_MODES) as KardMode[]).map((m) => (
+                        <button
+                          key={m}
+                          type="button"
+                          onClick={() => set("theme", m)}
+                          className={cn(
+                            "flex h-9 flex-1 items-center justify-center rounded-full border text-[11px] font-medium transition-colors",
+                            form.theme === m
+                              ? "border-[#ff6600] text-black"
+                              : "border-[#e5e5e5] text-[#666] hover:border-black"
+                          )}
+                        >
+                          <span
+                            className="mr-1.5 h-3 w-3 rounded-full border border-black/10"
+                            style={{ background: KARD_MODES[m].swatch }}
+                          />
+                          {KARD_MODES[m].label}
+                        </button>
+                      ))}
+                    </div>
+                    <ImageAdjuster
+                      imageUrl={avatarUrl}
+                      value={form.imageTransform}
+                      onChange={(next) => set("imageTransform", next)}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           {kard && (

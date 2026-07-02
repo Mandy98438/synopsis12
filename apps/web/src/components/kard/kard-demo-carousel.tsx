@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
-import { KardLogo } from "./kard-logo";
 import GlareHover from "@/components/core/glare-hover";
+import { Kard } from "./Kard";
+import { KARD_MODES, type KardMode } from "./kardModes";
 
 interface Person {
   name: string;
@@ -117,295 +117,11 @@ const PEOPLE: Person[] = [
   },
 ];
 
-const BARCODE_BARS = [0,4,7,12,15,19,22,27,30,34,37,42,46,49,53,58,61,65,68,73,76,80,83,88,92,95,99,104,107,111,114,119,122,126,129,134,138];
-
-function Barcode() {
-  return (
-    <svg width="140" height="36" viewBox="0 0 140 36" aria-hidden="true">
-      {BARCODE_BARS.map((x, i) => (
-        <rect
-          key={i}
-          x={x}
-          y={0}
-          width={i % 3 === 2 ? 3 : i % 2 === 0 ? 2 : 1}
-          height={36}
-          fill="#555"
-        />
-      ))}
-    </svg>
-  );
-}
-
-function KardCard({ person }: { person: Person }) {
-  const [imgError, setImgError] = useState(false);
-
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    console.error('Image failed to load:', person.photo);
-    setImgError(true);
-  };
-
-  return (
-    <div className="kard-wrapper">
-      <GlareHover
-        background="#111111"
-        borderRadius="24px"
-        borderColor="#2a2a2a"
-        glareColor="#ff6600"
-        glareOpacity={0.3}
-        glareAngle={-45}
-        glareSize={200}
-        transitionDuration={400}
-        className="kard-glow-wrapper"
-        style={{ width: '320px' }}
-      >
-        <div className="kard">
-          {/* Header */}
-          <div className="kard-header">
-            <div className="kard-logo">
-              <KardLogo size="sm" isDark muted />
-              <span>KARD</span>
-            </div>
-
-            <span className="kard-company">{person.company}</span>
-
-            <button className="kard-edit" aria-label="Edit card">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Photo */}
-          <div className="kard-photo-wrap">
-            {!imgError ? (
-              <img
-                src={person.photo}
-                alt={person.name}
-                className="kard-photo"
-                onError={handleImageError}
-                crossOrigin="anonymous"
-              />
-            ) : (
-              <div className="kard-photo-placeholder kard-initials">{person.initials}</div>
-            )}
-            <div className="orange-corner" />
-          </div>
-
-          {/* Identity */}
-          <div className="kard-name">{person.name}</div>
-          <div className="kard-role">{person.role}</div>
-
-          {/* Socials */}
-          <div className="kard-socials">
-            {person.linkedin && (
-              <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="LinkedIn">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z" />
-                  <circle cx="4" cy="4" r="2" />
-                </svg>
-              </a>
-            )}
-            {person.twitter && (
-              <a href={person.twitter} target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="X / Twitter">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                </svg>
-              </a>
-            )}
-          </div>
-
-          {/* Footer */}
-          <div className="kard-footer">
-            <div className="barcode-wrap">
-              <Barcode />
-              <span className="barcode-num">0 35545 82358 78 1</span>
-            </div>
-            <span className="kard-id">ID : kard.io/{person.kardId}</span>
-          </div>
-        </div>
-      </GlareHover>
-
-      <style jsx>{`
-        .kard-wrapper {
-          width: 320px;
-        }
-        .kard {
-          width: 320px;
-          background: transparent;
-          border-radius: 24px;
-          padding: 20px 20px 24px;
-          color: #fff;
-          position: relative;
-          border: none;
-          font-family: var(--font-sans, system-ui, sans-serif);
-          animation: cardIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-        @keyframes cardIn {
-          from { opacity: 0; transform: translateY(20px) scale(0.97); }
-          to   { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        /* Header */
-        .kard-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 16px;
-          position: relative;
-        }
-        .kard-logo {
-          display: flex;
-          align-items: center;
-          gap: 7px;
-          font-size: 12px;
-          font-weight: 500;
-          letter-spacing: 0.08em;
-          color: #fff;
-        }
-        .kard-company {
-          font-size: 12px;
-          font-weight: 500;
-          letter-spacing: 0.06em;
-          color: #aaa;
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
-          white-space: nowrap;
-        }
-        .kard-edit {
-          color: #aaa;
-          background: #222;
-          border-radius: 8px;
-          width: 30px;
-          height: 30px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border: 0.5px solid #333;
-          cursor: pointer;
-          transition: background 0.2s, color 0.2s;
-        }
-        .kard-edit:hover {
-          background: #2a2a2a;
-          color: #F97316;
-        }
-
-        /* Photo */
-        .kard-photo-wrap {
-          position: relative;
-          width: 100%;
-          height: 260px;
-          border-radius: 16px;
-          overflow: hidden;
-          background: #1e1e1e;
-          margin-bottom: 18px;
-        }
-        .kard-photo {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center top;
-          filter: grayscale(100%);
-        }
-        .kard-photo-placeholder {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .kard-initials {
-          font-size: 64px;
-          font-weight: 700;
-          color: #333;
-          letter-spacing: -2px;
-        }
-        .orange-corner {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 80px;
-          height: 48px;
-          background: #F97316;
-          border-radius: 0 24px 0 0;
-          transition: width 0.3s ease;
-        }
-        .kard:hover .orange-corner {
-          width: 100px;
-        }
-
-        /* Identity */
-        .kard-name {
-          font-size: 28px;
-          font-weight: 700;
-          margin: 0 0 4px;
-          letter-spacing: -0.02em;
-          line-height: 1.1;
-        }
-        .kard-role {
-          font-size: 14px;
-          color: #888;
-          margin: 0 0 16px;
-          font-weight: 400;
-        }
-
-        /* Socials */
-        .kard-socials {
-          display: flex;
-          gap: 14px;
-          align-items: center;
-          margin-bottom: 22px;
-        }
-        .social-icon {
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          border: 1.5px solid #333;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          color: #ccc;
-          transition: border-color 0.2s, color 0.2s, background 0.2s;
-          text-decoration: none;
-        }
-        .social-icon:hover {
-          border-color: #F97316;
-          color: #F97316;
-          background: #1a1a1a;
-        }
-
-        /* Footer */
-        .kard-footer {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-end;
-        }
-        .barcode-wrap {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-        .barcode-num {
-          font-size: 9px;
-          color: #555;
-          letter-spacing: 0.04em;
-        }
-        .kard-id {
-          font-size: 11px;
-          color: #666;
-          font-family: monospace;
-        }
-      `}</style>
-    </div>
-  );
-}
-
 export default function KardDemoCarousel() {
   const [current, setCurrent] = useState(0);
   const [visible, setVisible] = useState(true);
   const [playing, setPlaying] = useState(true);
+  const [mode, setMode] = useState<KardMode>("dark");
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const changeCard = (newIndex: number | ((prev: number) => number)) => {
@@ -451,8 +167,44 @@ export default function KardDemoCarousel() {
         onMouseEnter={() => setPlaying(false)}
         onMouseLeave={() => setPlaying(true)}
       >
+        <div className="mode-switcher" aria-label="Card style">
+          {(Object.keys(KARD_MODES) as KardMode[]).map((m) => (
+            <button
+              key={m}
+              className={`mode-dot ${mode === m ? "active" : ""}`}
+              onClick={() => setMode(m)}
+              aria-label={`${KARD_MODES[m].label} mode`}
+              style={{ background: KARD_MODES[m].swatch }}
+            />
+          ))}
+        </div>
         <div className={`card-fade ${visible ? 'visible' : ''}`}>
-          <KardCard person={PEOPLE[current]!} />
+          <GlareHover
+            background={mode === "dark" ? "#111111" : "transparent"}
+            borderRadius="24px"
+            borderColor={mode === "dark" ? "#2a2a2a" : "transparent"}
+            glareColor="#ff6600"
+            glareOpacity={0.3}
+            glareAngle={-45}
+            glareSize={200}
+            transitionDuration={400}
+            className="kard-glow-wrapper"
+            style={{ width: "320px" }}
+          >
+            <Kard
+              mode={mode}
+              imageUrl={PEOPLE[current]!.photo}
+              name={PEOPLE[current]!.name}
+              title={PEOPLE[current]!.role}
+              company={PEOPLE[current]!.company}
+              initials={PEOPLE[current]!.initials}
+              barcodeId={PEOPLE[current]!.kardId}
+              socialLinks={{
+                linkedin: PEOPLE[current]!.linkedin,
+                twitter: PEOPLE[current]!.twitter,
+              }}
+            />
+          </GlareHover>
         </div>
       </div>
 
@@ -505,7 +257,31 @@ export default function KardDemoCarousel() {
         }
         .nav-btn:hover { background: #F97316; border-color: #F97316; }
         .counter { font-size: 13px; color: #888; min-width: 56px; text-align: center; }
-        .card-stage { display: flex; justify-content: center; }
+        .card-stage { display: flex; justify-content: center; position: relative; }
+        .mode-switcher {
+          position: absolute;
+          left: -44px;
+          top: 18px;
+          z-index: 3;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          padding: 8px;
+          border-radius: 999px;
+          background: rgba(255,255,255,0.86);
+          border: 1px solid rgba(0,0,0,0.08);
+          box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+        }
+        .mode-dot {
+          width: 18px;
+          height: 18px;
+          border-radius: 999px;
+          border: 2px solid rgba(255,255,255,0.9);
+          cursor: pointer;
+          padding: 0;
+          box-shadow: 0 0 0 1px rgba(0,0,0,0.14);
+        }
+        .mode-dot.active { box-shadow: 0 0 0 2px #F97316; }
         .card-fade {
           opacity: 0;
           transform: translateY(12px) scale(0.96);

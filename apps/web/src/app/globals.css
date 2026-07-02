@@ -287,12 +287,12 @@ body {
   overflow: hidden;
   background: #1e1e1e;
   margin-bottom: 18px;
+  border: 2px solid #F97316;
 }
 
 .kard-photo {
   object-fit: cover;
   object-position: center top;
-  filter: grayscale(100%);
 }
 
 .kard-photo-placeholder {
@@ -301,21 +301,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.orange-corner {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 80px;
-  height: 48px;
-  background: #F97316;
-  border-radius: 0 24px 0 0;
-  transition: width 0.3s ease;
-}
-
-.kard:hover .orange-corner {
-  width: 100px;
 }
 
 .kard-name {

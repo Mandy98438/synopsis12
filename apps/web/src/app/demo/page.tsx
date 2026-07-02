@@ -1,15 +1,15 @@
-import { type Metadata } from "next";
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { getDemoKard } from "@/lib/demo-kard";
 import { KardCard } from "@/components/kard/kard-card";
-
-export const metadata: Metadata = {
-  title: "Demo Kard - See how it works",
-  description: "See a live example of a Kard - your digital identity card for everywhere.",
-};
+import { KARD_MODES, type KardMode } from "@/components/kard/kardModes";
+import { cn } from "@/lib/cn";
 
 export default function DemoPage() {
   const kard = getDemoKard();
+  const [mode, setMode] = useState<KardMode>("dark");
 
   const socials = {
     linkedin: kard.links.find((l) => l.type.toLowerCase() === "linkedin")?.url,
@@ -23,14 +23,32 @@ export default function DemoPage() {
         <Link href="/" className="mb-8 text-sm text-[#666] hover:text-black">Back to Kard</Link>
         <p className="mb-4 text-sm text-[#888]">Live demo</p>
 
-        <KardCard
-          name={`${kard.firstName} ${kard.lastName}`}
-          role={kard.headline}
-          company={kard.company ?? ""}
-          photoUrl={kard.avatarUrl ?? undefined}
-          kardId={kard.username}
-          socials={socials}
-        />
+        <div className="relative">
+          <div className="absolute -left-12 top-6 z-10 flex flex-col gap-2 rounded-full border border-black/5 bg-white/90 p-2 shadow-lg" aria-label="Card style">
+            {(Object.keys(KARD_MODES) as KardMode[]).map((m) => (
+              <button
+                key={m}
+                className={cn(
+                  "h-[18px] w-[18px] rounded-full border border-white shadow-[0_0_0_1px_rgba(0,0,0,0.14)] cursor-pointer transition-shadow",
+                  mode === m && "ring-2 ring-[#ff6600]"
+                )}
+                onClick={() => setMode(m)}
+                aria-label={`${KARD_MODES[m].label} mode`}
+                style={{ background: KARD_MODES[m].swatch }}
+              />
+            ))}
+          </div>
+
+          <KardCard
+            name={`${kard.firstName} ${kard.lastName}`}
+            role={kard.headline}
+            company={kard.company ?? ""}
+            photoUrl={kard.avatarUrl ?? undefined}
+            kardId={kard.username}
+            socials={socials}
+            theme={mode}
+          />
+        </div>
 
         <div className="mt-8 text-center">
           <p className="mb-4 text-sm text-[#666]">Like what you see?</p>
@@ -42,4 +60,3 @@ export default function DemoPage() {
     </main>
   );
 }
-
