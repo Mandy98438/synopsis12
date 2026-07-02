@@ -46,10 +46,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning className={`${playfairDisplay.variable} ${robotoMono.variable}`}>
       <body className="bg-white text-black antialiased font-[var(--font-playfair-display)]">
         <Providers>
-          {/* Global nav — floats over all pages */}
-          <div className="relative w-full">
-            <KardNav />
-          </div>
           {children}
         </Providers>
       </body>

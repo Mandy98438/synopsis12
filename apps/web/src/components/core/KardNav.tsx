@@ -46,8 +46,8 @@ const KARD_NAV_ITEMS: CardNavItem[] = [
     bgColor: "#1a1a1a",
     textColor: "#fff",
     links: [
-      { label: "Sign in",     href: "/sign-in", ariaLabel: "Sign in to Kard" },
-      { label: "Get started", href: "/sign-up", ariaLabel: "Create your Kard" },
+      { label: "Sign in",     href: "/auth/signin", ariaLabel: "Sign in to Kard" },
+      { label: "Get started", href: "/auth/signin", ariaLabel: "Create your Kard" },
     ],
   },
 ];
@@ -124,12 +124,14 @@ export default function KardNav() {
   };
 
   useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
     const tl = createTimeline();
     tlRef.current = tl;
     return () => { tl?.kill(); tlRef.current = null; };
   }, []);
 
   useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
     const handleResize = () => {
       if (!tlRef.current) return;
       if (isExpanded) {
@@ -220,13 +222,13 @@ export default function KardNav() {
           {/* CTA buttons — desktop */}
           <div className="hidden md:flex items-center gap-2">
             <Link
-              href="/sign-in"
+              href="/auth/signin"
               className="px-4 py-1.5 text-sm font-medium border border-black rounded-full text-black no-underline hover:bg-black hover:text-white transition-colors duration-200"
             >
               Sign in
             </Link>
             <Link
-              href="/sign-up"
+              href="/auth/signin"
               className="px-4 py-1.5 text-sm font-semibold rounded-full text-white no-underline hover:opacity-90 transition-opacity duration-200"
               style={{ backgroundColor: "#F97316" }}
             >
