@@ -89,7 +89,7 @@ export default function KardNav() {
   const calculateHeight = () => {
     const navEl = navRef.current;
     if (!navEl) return 260;
-    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    const isMobile = typeof window !== 'undefined' && window.matchMedia("(max-width: 768px)").matches;
     if (isMobile) {
       const contentEl = navEl.querySelector(".card-nav-content") as HTMLElement;
       if (contentEl) {
